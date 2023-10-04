@@ -6,9 +6,9 @@ export interface IModifyAuthRequest extends Request {
 }
 
 export interface IDimensions {
-  width: number;
-  height: number;
-  length: number;
+  width?: number;
+  height?: number;
+  length?: number;
 }
 
 export interface ICoordinates {

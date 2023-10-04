@@ -3,15 +3,16 @@ import { body, check } from 'express-validator';
 
 import shelveController from '../controllers/shelve.controller.js';
 
-import shelveService from '../services/shelve.service.js';
-
 import { routes } from '../constants/routes.js';
 
 import authMiddleware from '../middlewares/auth.middleware.js';
 
+import { checkIsUpdatingBodyValid } from '../helpers/validation.helpers.js';
+
 const router = Router();
 
 const shelveWithID = `${routes.shelves}${routes.qID}`;
+const allowedFields = ['shelveID', 'width', 'height', 'length'];
 
 router.post(
   routes.shelves,
@@ -38,7 +39,7 @@ router.patch(
   shelveWithID,
   [
     body().custom((value, { req }) =>
-      shelveService.checkIsUpdatingBodyValid(req.body),
+      checkIsUpdatingBodyValid(req.body, allowedFields),
     ),
     check('shelveID', 'shelveID is not number').optional().isNumeric(),
     check('width', 'width is not number').optional().isNumeric(),

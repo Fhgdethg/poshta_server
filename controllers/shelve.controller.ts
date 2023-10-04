@@ -1,11 +1,12 @@
 import { Request, Response } from 'express';
 import { validationResult } from 'express-validator';
 
+import shelveService from '../services/shelve.service.js';
+
 import shelveRepository from '../repositories/shelve.repository.js';
 import userRepository from '../repositories/user.repository.js';
 
 import { IShelve, IShelveExtremes } from '../types/shelve.types.js';
-import shelveService from '../services/shelve.service.js';
 
 class ShelveController {
   async addShelve(req: Request, res: Response) {
@@ -75,7 +76,7 @@ class ShelveController {
 
   async getAllShelvesIDs(req: Request, res: Response) {
     try {
-      const allShelvesIDs = await shelveRepository.findAllIDs();
+      const allShelvesIDs = await shelveService.getShelvesIDs();
 
       return res.send(allShelvesIDs);
     } catch (err) {
@@ -88,6 +89,11 @@ class ShelveController {
       const { id } = req.params;
 
       const shelve = await shelveRepository.getByID(Number(id));
+
+      if (!shelve)
+        return res
+          .status(404)
+          .json({ message: `Shelve with id = ${id} is not exist` });
 
       return res.send(shelve);
     } catch (err) {
@@ -108,7 +114,9 @@ class ShelveController {
       const { id } = req.params;
       const { body } = req;
 
-      await shelveRepository.updateByFields(Number(id), body);
+      const repositoryBody = shelveService.getUpdateRepositoryBody(body);
+
+      await shelveRepository.updateByFields(Number(id), repositoryBody);
 
       return res.send();
     } catch (err) {

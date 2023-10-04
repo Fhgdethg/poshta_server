@@ -34,9 +34,8 @@ class ShelveRepository {
     return await Shelve.deleteOne({ shelveID });
   }
 
-  async findAllIDs() {
-    const shelve = await Shelve.find({}, 'shelveID');
-    return shelve ? shelve.map((user) => user.shelveID) : [];
+  async findAll() {
+    return await Shelve.find({});
   }
 
   async updateByFields(shelveID: number, body: IUpdateShelveBody) {

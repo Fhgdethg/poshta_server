@@ -1,25 +1,27 @@
+import shelveRepository from '../repositories/shelve.repository.js';
+
 import { IUpdateShelveBody } from '../types/shelve.types.js';
 
 class ShelveService {
-  checkIsUpdatingBodyValid(body: IUpdateShelveBody) {
-    const allowedFields = ['shelveID', 'width', 'height', 'length'];
-    const receivedFields = Object.keys(body);
-
-    if (!receivedFields.length) {
-      throw new Error(`Request body is empty`);
+  async getShelvesIDs() {
+    try {
+      const shelves = await shelveRepository.findAll();
+      return shelves ? shelves.map((user) => user.shelveID) : [];
+    } catch (err) {
+      throw new Error('Getting shelves IDs error');
     }
+  }
 
-    const isValid = receivedFields.every((field) =>
-      allowedFields.includes(field),
-    );
+  getUpdateRepositoryBody(body: IUpdateShelveBody) {
+    const { shelveID, width, height, length } = body;
+    const repositoryBody: any = {};
 
-    if (!isValid) {
-      throw new Error(
-        `Request body must include only ${allowedFields.join(', ')} fields`,
-      );
-    }
+    if (shelveID) repositoryBody.shelveID = shelveID;
+    if (width) repositoryBody['shelveDimensions.width'] = width;
+    if (height) repositoryBody['shelveDimensions.height'] = height;
+    if (length) repositoryBody['shelveDimensions.length'] = length;
 
-    return true;
+    return repositoryBody;
   }
 }
 

@@ -9,7 +9,7 @@ const Product = new Schema({
     height: { type: Number, required: true },
     length: { type: Number, required: true },
   },
-  products: [{ type: Number, ref: 'Shelve' }],
+  shelveID: { type: Number, ref: 'Shelve' },
 });
 
 export default model('Product', Product);

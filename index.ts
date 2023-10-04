@@ -4,6 +4,7 @@ import mongoose from 'mongoose';
 
 import authRouter from './routers/auth.router.js';
 import shelveRouter from './routers/shelve.router.js';
+import productRouter from './routers/product.router.js';
 
 import { routes } from './constants/routes.js';
 
@@ -19,6 +20,7 @@ app.use(corsMiddleware);
 app.use(express.json());
 app.use(`${routes.api}${routes.auth}`, authRouter);
 app.use(routes.api, shelveRouter);
+app.use(routes.api, productRouter);
 
 const start = async () => {
   try {
