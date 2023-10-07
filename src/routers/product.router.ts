@@ -11,6 +11,7 @@ import { checkIsUpdatingBodyValid } from '../helpers/validation.helpers.js';
 const router = Router();
 
 const productWithID = `${routes.products}${routes.qID}`;
+const productWithIDSimulation = `${productWithID}${routes.simulation}`;
 const allowedFields = ['shelveID', 'width', 'height', 'length', 'productID'];
 
 router.post(
@@ -28,6 +29,11 @@ router.post(
 
 router.get(routes.products, authMiddleware, productController.getAllProducts);
 router.get(productWithID, authMiddleware, productController.getProductByID);
+router.get(
+  productWithIDSimulation,
+  authMiddleware,
+  productController.getProductByIDSimulation,
+);
 
 router.patch(
   productWithID,

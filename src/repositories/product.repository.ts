@@ -1,6 +1,6 @@
 import Product from '../models/Product.js';
 
-import { IProduct } from '../types/product.types';
+import { IProduct } from '../types/product.types.js';
 
 class ProductRepository {
   async findOne<T extends Object>(expression: T) {

@@ -4,9 +4,8 @@ import { validationResult } from 'express-validator';
 import shelveService from '../services/shelve.service.js';
 
 import shelveRepository from '../repositories/shelve.repository.js';
-import userRepository from '../repositories/user.repository.js';
 
-import { IShelve, IShelveExtremes } from '../types/shelve.types.js';
+import { IShelve } from '../types/shelve.types.js';
 
 class ShelveController {
   async addShelve(req: Request, res: Response) {
@@ -32,20 +31,9 @@ class ShelveController {
           .status(404)
           .json({ message: `Shelve with id ${shelveID} is already exist` });
 
-      const [{ maxY, maxX }]: IShelveExtremes[] =
-        await shelveRepository.findExtremesByExtremumField({
-          maxY: { $max: '$coordinates.y' },
-          maxX: { $max: '$coordinates.x' },
-        });
-
-      const isExtremumFindSuccess = Boolean(maxY && maxX);
-
-      const newX =
-        isExtremumFindSuccess && maxX >= maxShelvesCount ? 1 : maxX + 1;
-      const newY =
-        isExtremumFindSuccess && maxX >= maxShelvesCount ? maxY + 1 : maxY;
-
-      const usersIDs = await userRepository.findAllIDs();
+      const { newX, newY } =
+        await shelveService.getNewCoordinates(maxShelvesCount);
+      console.log('he');
 
       const newShelve = await shelveRepository.create({
         shelveID,
@@ -55,7 +43,6 @@ class ShelveController {
           y: newY,
         },
         products: [],
-        users: usersIDs,
       });
 
       res.send(newShelve);

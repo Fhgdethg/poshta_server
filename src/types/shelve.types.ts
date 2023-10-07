@@ -1,13 +1,10 @@
-import { Types } from 'mongoose';
-
-import { IDimensions, ICoordinates } from './basic.types.js';
+import { IDimensions, ICoordinates } from './basic.types';
 
 export interface IShelve {
   shelveID: number;
   shelveDimensions: IDimensions;
   coordinates: ICoordinates;
   products: number[];
-  users: Types.ObjectId[];
 }
 
 export interface IShelveExtremes {
@@ -20,4 +17,5 @@ export interface IUpdateShelveBody {
   width?: number;
   height?: number;
   length?: number;
+  products?: number[];
 }

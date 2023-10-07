@@ -6,7 +6,7 @@ import authService from '../services/auth.service.js';
 
 import userRepository from '../repositories/user.repository.js';
 
-import { IModifyAuthRequest } from '../types/basic.types';
+import { IModifyAuthRequest } from '../types/basic.types.js';
 
 class AuthController {
   async login(req: Request, res: Response) {

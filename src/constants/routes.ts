@@ -7,4 +7,6 @@ export const routes = {
   qID: '/:id',
   allIDs: '/all-ids',
   products: '/products',
+  apiDocs: '/api-docs',
+  simulation: '/simulation',
 };

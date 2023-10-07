@@ -1,4 +1,4 @@
-import { IDimensions } from './basic.types.js';
+import { IDimensions } from './basic.types';
 
 export interface IProduct {
   productID: number;

@@ -1,4 +1,4 @@
-import mongoose, { Types } from 'mongoose';
+import mongoose from 'mongoose';
 
 const { Schema, model } = mongoose;
 
@@ -14,7 +14,6 @@ const Shelve = new Schema({
     y: { type: Number, required: true },
   },
   products: [{ type: Number, ref: 'Product' }],
-  users: [{ type: Types.ObjectId, ref: 'User' }],
 });
 
 export default model('Shelve', Shelve);
