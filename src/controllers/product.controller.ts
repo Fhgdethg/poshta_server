@@ -83,7 +83,6 @@ class ProductController {
       } = req;
 
       const mqttBody = JSON.stringify({ x, y, id });
-
       const mqttUrl = 'mqtt://mqtt.eclipse.org';
       const client = mqtt.connect(mqttUrl);
 
