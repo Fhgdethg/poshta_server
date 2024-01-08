@@ -78,9 +78,10 @@ class ShelveController {
       const shelve = await shelveRepository.getByID(Number(id));
 
       if (!shelve)
-        return res
-          .status(404)
-          .json({ message: `Shelve with id = ${id} is not exist` });
+        return res.status(404).json({
+          message: `Shelve with id = ${id} is not exist`,
+          isShelveNotExist: true,
+        });
 
       return res.send(shelve);
     } catch (err) {

@@ -5,8 +5,10 @@ import mqtt from 'mqtt';
 import productService from '../services/product.service.js';
 
 import productRepository from '../repositories/product.repository.js';
+import shelveRepository from '../repositories/shelve.repository.js';
 
 import { IProduct } from '../types/product.types.js';
+import { IShelve } from '../types/shelve.types.js';
 
 class ProductController {
   async addProduct(req: Request, res: Response) {
@@ -32,6 +34,17 @@ class ProductController {
         return res
           .status(404)
           .json({ message: `Product with id ${productID} is already exist` });
+
+      const savedShelve: IShelve | null | any = await shelveRepository.findOne<{
+        shelveID: number;
+      }>({
+        shelveID,
+      });
+
+      if (!savedShelve?.shelveID)
+        return res
+          .status(404)
+          .json({ message: `Shelve with id ${shelveID} is not exist` });
 
       const newProduct = await productRepository.create({
         productID,
@@ -65,9 +78,10 @@ class ProductController {
       });
 
       if (!product)
-        return res
-          .status(404)
-          .json({ message: `Product with id = ${id} is not exist` });
+        return res.status(404).json({
+          message: `Product with id = ${id} is not exist`,
+          isProductNotExist: true,
+        });
 
       return res.send(product);
     } catch (err) {
