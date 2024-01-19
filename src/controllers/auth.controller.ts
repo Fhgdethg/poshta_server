@@ -7,6 +7,7 @@ import authService from '../services/auth.service.js';
 import userRepository from '../repositories/user.repository.js';
 
 import { IModifyAuthRequest } from '../types/basic.types.js';
+import { Types } from 'mongoose';
 
 class AuthController {
   async login(req: Request, res: Response) {
@@ -44,8 +45,16 @@ class AuthController {
   async auth(req: IModifyAuthRequest, res: Response) {
     try {
       const { userID } = req;
+
       if (!userID) return res.status(400).send('Session was ended');
-      return res.send('Succeeded');
+
+      const user = await userRepository.findOne<{ _id: Types.ObjectId }>({
+        _id: userID,
+      });
+
+      if (!user) return res.status(404).send('User was not founded');
+
+      return res.send(user);
     } catch (err) {
       return res.status(500).json(err);
     }
