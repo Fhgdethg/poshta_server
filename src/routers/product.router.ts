@@ -35,21 +35,21 @@ router.get(
   productController.getProductByIDSimulation,
 );
 
-router.patch(
-  productWithID,
-  [
-    body().custom((value, { req }) =>
-      checkIsUpdatingBodyValid(req.body, allowedFields),
-    ),
-    check('shelveID', 'shelveID is not number').optional().isNumeric(),
-    check('productID', 'productID is not number').optional().isNumeric(),
-    check('width', 'width is not number').optional().isNumeric(),
-    check('height', 'height is not number').optional().isNumeric(),
-    check('length', 'length is not number').optional().isNumeric(),
-  ],
-  authMiddleware,
-  productController.updateProduct,
-);
+// router.patch(
+//   productWithID,
+//   [
+//     body().custom((value, { req }) =>
+//       checkIsUpdatingBodyValid(req.body, allowedFields),
+//     ),
+//     check('shelveID', 'shelveID is not number').optional().isNumeric(),
+//     check('productID', 'productID is not number').optional().isNumeric(),
+//     check('width', 'width is not number').optional().isNumeric(),
+//     check('height', 'height is not number').optional().isNumeric(),
+//     check('length', 'length is not number').optional().isNumeric(),
+//   ],
+//   authMiddleware,
+//   productController.updateProduct,
+// );
 
 router.delete(productWithID, authMiddleware, productController.deleteProduct);
 

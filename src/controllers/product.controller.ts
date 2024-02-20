@@ -3,6 +3,7 @@ import { validationResult } from 'express-validator';
 import mqtt from 'mqtt';
 
 import productService from '../services/product.service.js';
+import shelveService from '../services/shelve.service.js';
 
 import productRepository from '../repositories/product.repository.js';
 import shelveRepository from '../repositories/shelve.repository.js';
@@ -46,13 +47,34 @@ class ProductController {
           .status(404)
           .json({ message: `Shelve with id ${shelveID} is not exist` });
 
+      const isProductFit = shelveService.getIsProductFit(
+        savedShelve.shelveDimensions.width,
+        savedShelve.shelveDimensions.height,
+        savedShelve.shelveDimensions.length,
+        savedShelve.percentBusyVolume,
+        width,
+        height,
+        length,
+      );
+
+      if (!isProductFit)
+        return res.status(400).json({
+          message: `Shelve with id ${shelveID} is not enough space`,
+        });
+
       const newProduct = await productRepository.create({
         productID,
         productDimensions: { width, height, length },
         shelveID,
       });
 
-      await productService.addProductOnShelve(shelveID, productID);
+      await productService.addProductOnShelve(
+        shelveID,
+        productID,
+        width,
+        height,
+        length,
+      );
 
       res.send(newProduct);
     } catch (err) {
@@ -126,47 +148,47 @@ class ProductController {
     }
   }
 
-  async updateProduct(req: Request, res: Response) {
-    try {
-      const errors = validationResult(req);
-
-      if (!errors.isEmpty())
-        res.status(400).json({
-          message: 'Data is not correct',
-          errors: errors.array(),
-        });
-
-      const productID = Number(req.params.id);
-      const { body } = req;
-
-      const product = await productRepository.findOne<{ productID: number }>({
-        productID,
-      });
-
-      const isAnotherShelve =
-        body?.shelveID && product && product?.shelveID !== body?.shelveID;
-
-      if (isAnotherShelve) {
-        await productService.deleteProductWithShelve(
-          product.shelveID,
-          productID,
-        );
-
-        await productService.addProductOnShelve(
-          body.shelveID,
-          body?.productID ? body.productID : productID,
-        );
-      }
-
-      const repositoryBody = productService.getUpdateRepositoryBody(body);
-
-      await productRepository.updateByFields(productID, repositoryBody);
-
-      return res.send();
-    } catch (err) {
-      return res.status(500).json(err);
-    }
-  }
+  // async updateProduct(req: Request, res: Response) {
+  //   try {
+  //     const errors = validationResult(req);
+  //
+  //     if (!errors.isEmpty())
+  //       res.status(400).json({
+  //         message: 'Data is not correct',
+  //         errors: errors.array(),
+  //       });
+  //
+  //     const productID = Number(req.params.id);
+  //     const { body } = req;
+  //
+  //     const product = await productRepository.findOne<{ productID: number }>({
+  //       productID,
+  //     });
+  //
+  //     const isAnotherShelve =
+  //       body?.shelveID && product && product?.shelveID !== body?.shelveID;
+  //
+  //     if (isAnotherShelve) {
+  //       await productService.deleteProductWithShelve(
+  //         product.shelveID,
+  //         productID,
+  //       );
+  //
+  //       await productService.addProductOnShelve(
+  //         body.shelveID,
+  //         body?.productID ? body.productID : productID,
+  //       );
+  //     }
+  //
+  //     const repositoryBody = productService.getUpdateRepositoryBody(body);
+  //
+  //     await productRepository.updateByFields(productID, repositoryBody);
+  //
+  //     return res.send();
+  //   } catch (err) {
+  //     return res.status(500).json(err);
+  //   }
+  // }
 
   async deleteProduct(req: Request, res: Response) {
     try {
@@ -175,6 +197,10 @@ class ProductController {
       const product = await productRepository.findOne<{ productID: number }>({
         productID,
       });
+
+      const {
+        productDimensions: { width, height, length },
+      } = product;
 
       if (!product?.shelveID)
         return res
@@ -186,7 +212,13 @@ class ProductController {
       if (!productDeleteResult.deletedCount)
         return res.status(404).json({ message: `Product deletion error` });
 
-      await productService.deleteProductWithShelve(product.shelveID, productID);
+      await productService.deleteProductWithShelve(
+        product.shelveID,
+        productID,
+        width,
+        height,
+        length,
+      );
 
       return res.send(productDeleteResult);
     } catch (err) {

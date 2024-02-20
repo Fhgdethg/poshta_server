@@ -43,6 +43,42 @@ class ShelveService {
     }
   }
 
+  getNewPercentBusyVolume(
+    oldPercentBusyVolume: number,
+    shelveWidth: number,
+    shelveHeight: number,
+    shelveLength: number,
+    productWidth: number,
+    productHeight: number,
+    productLength: number,
+    productAction: 'add' | 'remove',
+  ) {
+    const shelveVolume = shelveWidth * shelveHeight * shelveLength;
+    const productVolume = productWidth * productHeight * productLength;
+
+    const productBusyPlace = (productVolume * 100) / shelveVolume;
+
+    if (productAction === 'add') return oldPercentBusyVolume + productBusyPlace;
+    else return oldPercentBusyVolume - productBusyPlace;
+  }
+
+  getIsProductFit(
+    shelveWidth: number,
+    shelveHeight: number,
+    shelveLength: number,
+    shelvePercentBusyVolume: number,
+    productWidth: number,
+    productHeight: number,
+    productLength: number,
+  ) {
+    const shelveVolume = shelveWidth * shelveHeight * shelveLength;
+    const busyVolume = (shelvePercentBusyVolume * 100) / shelveVolume;
+    const emptyVolume = shelveVolume - busyVolume;
+    const productVolume = productWidth * productHeight * productLength;
+
+    return emptyVolume >= productVolume;
+  }
+
   getUpdateRepositoryBody(body: IUpdateShelveBody) {
     const { shelveID, width, height, length } = body;
     const repositoryBody: any = {};

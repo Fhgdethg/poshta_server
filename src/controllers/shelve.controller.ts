@@ -33,7 +33,6 @@ class ShelveController {
 
       const { newX, newY } =
         await shelveService.getNewCoordinates(maxShelvesCount);
-      console.log('he');
 
       const newShelve = await shelveRepository.create({
         shelveID,
@@ -43,6 +42,7 @@ class ShelveController {
           y: newY,
         },
         products: [],
+        percentBusyVolume: 0,
       });
 
       res.send(newShelve);

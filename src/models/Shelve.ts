@@ -13,6 +13,7 @@ const Shelve = new Schema({
     x: { type: Number, required: true },
     y: { type: Number, required: true },
   },
+  percentBusyVolume: { type: Number, required: true, default: 0 },
   products: [{ type: Number, ref: 'Product' }],
 });
 

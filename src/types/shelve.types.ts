@@ -5,6 +5,7 @@ export interface IShelve {
   shelveDimensions: IDimensions;
   coordinates: ICoordinates;
   products: number[];
+  percentBusyVolume: number;
 }
 
 export interface IShelveExtremes {
@@ -18,4 +19,5 @@ export interface IUpdateShelveBody {
   height?: number;
   length?: number;
   products?: number[];
+  percentBusyVolume?: number;
 }
