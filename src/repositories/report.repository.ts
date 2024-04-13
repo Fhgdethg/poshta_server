@@ -18,7 +18,7 @@ class ReportRepository {
   }
 
   async deleteByIDs(reportIDs: number[]) {
-    return await Report.deleteOne({ reportID: { $in: reportIDs } });
+    return await Report.deleteMany({ reportID: { $in: reportIDs } });
   }
 
   async deleteAll() {
