@@ -5,6 +5,7 @@ import mongoose from 'mongoose';
 import authRouter from './routers/auth.router.js';
 import shelveRouter from './routers/shelve.router.js';
 import productRouter from './routers/product.router.js';
+import reportRouter from './routers/report.router.js';
 
 import { routes } from './constants/routes.js';
 
@@ -21,6 +22,7 @@ app.use(express.json());
 app.use(`${routes.api}${routes.auth}`, authRouter);
 app.use(routes.api, shelveRouter);
 app.use(routes.api, productRouter);
+app.use(routes.api, reportRouter);
 
 const start = async () => {
   try {

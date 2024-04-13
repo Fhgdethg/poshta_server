@@ -5,8 +5,11 @@ export const routes = {
   login: '/login',
   shelves: '/shelves',
   qID: '/:id',
+  byIDs: '/by-ids',
+  byUserID: '/by-user-id',
   allIDs: '/all-ids',
   products: '/products',
+  reports: '/reports',
   apiDocs: '/api-docs',
   simulation: '/simulation',
 };
