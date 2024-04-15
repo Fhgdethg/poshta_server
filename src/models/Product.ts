@@ -4,6 +4,9 @@ const { Schema, model } = mongoose;
 
 const Product = new Schema({
   productID: { type: Number, required: true, unique: true },
+  productTitle: { type: String, required: false },
+  productDescription: { type: String, required: false },
+  productImgUrl: { type: String, required: false },
   productDimensions: {
     width: { type: Number, required: true },
     height: { type: Number, required: true },

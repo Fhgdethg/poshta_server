@@ -22,7 +22,16 @@ class ProductController {
           errors: errors.array(),
         });
 
-      const { productID, width, height, length, shelveID } = req.body;
+      const {
+        productID,
+        width,
+        height,
+        length,
+        shelveID,
+        productTitle,
+        productDescription,
+        productImgUrl,
+      } = req.body;
 
       const savedProduct: IProduct | null | any =
         await productRepository.findOne<{
@@ -66,6 +75,9 @@ class ProductController {
         productID,
         productDimensions: { width, height, length },
         shelveID,
+        productTitle,
+        productDescription,
+        productImgUrl,
       });
 
       await productService.addProductOnShelve(
