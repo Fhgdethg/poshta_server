@@ -5,7 +5,7 @@
   "type": "module",
   "license": "MIT",
   "scripts": {
-    "start": "npx nodemon --exec ts-node src/index.ts",
+    "start": "npx nodemon --exec ts-node dist/index",
     "build": "rimraf ./build && npx tcs && node build/index",
     "lint": "npx eslint ",
     "format": "npx eslint  --fix"
