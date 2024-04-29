@@ -13,7 +13,7 @@ const authMiddleware = (
   if (req.method === 'OPTIONS') return next();
 
   try {
-    const token = req.headers.authorization?.split(' ')[1];
+    const token = req.cookies.authToken;
 
     if (!token) {
       return res.status(401).json({ message: 'Auth error' });
