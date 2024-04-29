@@ -4,6 +4,7 @@ import mongoose from 'mongoose';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
 
+import emptyRouter from './routers/empty.router.js';
 import authRouter from './routers/auth.router.js';
 import shelveRouter from './routers/shelve.router.js';
 import productRouter from './routers/product.router.js';
@@ -27,6 +28,7 @@ app.use(
     credentials: true,
   }),
 );
+app.use(routes.root, emptyRouter);
 app.use(`${routes.api}${routes.auth}`, authRouter);
 app.use(routes.api, shelveRouter);
 app.use(routes.api, productRouter);
