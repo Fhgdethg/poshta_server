@@ -36,7 +36,11 @@ class AuthController {
 
       const token = authService.getToken(user._id);
 
-      res.cookie('authToken', token, { httpOnly: true });
+      res.cookie('authToken', token, {
+        httpOnly: true,
+        sameSite: 'none',
+        secure: true,
+      });
       return res.send({ token, user });
     } catch (err) {
       return res.status(500).json(err);
