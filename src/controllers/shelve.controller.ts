@@ -4,6 +4,7 @@ import { validationResult } from 'express-validator';
 import shelveService from '../services/shelve.service.js';
 
 import shelveRepository from '../repositories/shelve.repository.js';
+import productRepository from '../repositories/product.repository.js';
 
 import { IShelve } from '../types/shelve.types.js';
 
@@ -116,12 +117,18 @@ class ShelveController {
     try {
       const { id } = req.params;
 
+      const shelve = await shelveRepository.getByID(Number(id));
+
+      if (!shelve)
+        return res.status(404).json({
+          message: `Shelve with id = ${id} is not exist`,
+          isShelveNotExist: true,
+        });
+
       const shelveDeleteResult = await shelveRepository.deleteByID(Number(id));
 
-      if (!shelveDeleteResult.deletedCount)
-        return res
-          .status(404)
-          .json({ message: `Shelve with id ${id} is not exist` });
+      if (shelve?.products)
+        await productRepository.deleteManyByIDs(shelve.products);
 
       return res.send(shelveDeleteResult);
     } catch (err) {

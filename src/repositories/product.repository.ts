@@ -27,5 +27,9 @@ class ProductRepository {
   async deleteByID(productID: number) {
     return await Product.deleteOne({ productID });
   }
+
+  async deleteManyByIDs(productsIDs: number[]) {
+    return await Product.deleteMany({ productID: { $in: productsIDs } });
+  }
 }
 export default new ProductRepository();
