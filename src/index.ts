@@ -9,8 +9,10 @@ import authRouter from './routers/auth.router.js';
 import shelveRouter from './routers/shelve.router.js';
 import productRouter from './routers/product.router.js';
 import reportRouter from './routers/report.router.js';
+import chatMessageRouter from './routers/chatMessage.router.js';
 
 import { routes } from './constants/routes.js';
+import { Server } from 'socket.io';
 
 dotenv.config();
 
@@ -37,9 +39,20 @@ app.use(routes.api, reportRouter);
 const start = async () => {
   try {
     await mongoose.connect(`${process.env.DB_URL}`);
-    app.listen(PORT, () => {
+
+    const server = app.listen(PORT, () => {
       console.log(`Server started on port ${PORT}`);
     });
+
+    const chatServer = new Server(server, {
+      cors: {
+        origin: CLIENT_URLS,
+        methods: ['GET', 'POST'],
+        credentials: true,
+      },
+    });
+
+    chatMessageRouter(chatServer);
   } catch (err) {
     console.log(err);
   }
